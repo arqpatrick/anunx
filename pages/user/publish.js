@@ -105,6 +105,13 @@ const Publish = () => {
     }
   })
 
+  // LIDAR COM A FUNÇÃO DE REMOVER O ARQUIVO
+
+  const handleRemoveFile = (fileName) => { // recebe o file do onClick do botão de deletar
+    const newFileState = files.filter(file => file.name !== fileName) // atualiza os arquivos com todos menos o arquivo que foi clicado
+    setFiles(newFileState)
+  }
+
   // -FIM- DROPZONE
 
   // CONSTRUÇÃO DA PÁGINA
@@ -215,7 +222,7 @@ const Publish = () => {
                   
 
                   <Box className={classes.mask}>
-                    <IconButton color="secondary">
+                    <IconButton color="secondary" onClick={() => handleRemoveFile(file.name)}>
                       <DeleteForever fontSize="large" />
                     </IconButton>
                   </Box>
@@ -223,6 +230,8 @@ const Publish = () => {
                 
               ))
             }
+
+            {/* -FIM- LOOP PARA PERCORRER OS ARQUIVOS UPADOS */}
 
 
           </Box>
