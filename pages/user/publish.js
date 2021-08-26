@@ -3,7 +3,11 @@ import {
   Box, 
   Button, 
   Container, 
-  IconButton, 
+  FormControl, 
+  IconButton,
+  InputLabel,
+  OutlinedInput,
+  InputAdornment,
   Select, 
   TextField, 
   Typography 
@@ -109,7 +113,7 @@ const Publish = () => {
 
   const handleRemoveFile = (fileName) => { // recebe o file do onClick do botão de deletar
     const newFileState = files.filter(file => file.name !== fileName) // atualiza os arquivos com todos menos o arquivo que foi clicado
-    setFiles(newFileState)
+    setFiles(newFileState) // bug se upar o mesmo arquivo(mesmo nome)
   }
 
   // -FIM- DROPZONE
@@ -254,6 +258,24 @@ const Publish = () => {
           />
         </Box>
       </Container>
+
+      <Container maxWidth="md" className={classes.boxContainer}>
+        <Box className={classes.box}>
+          <Typography component="h6" variant="h6" color="textPrimary">
+            Preço
+          </Typography>
+          <br />
+          <FormControl fullWidth variant="outlined">
+            <InputLabel>Valor</InputLabel>
+            <OutlinedInput
+              onChange={() => {}}
+              startAdornment={<InputAdornment position="start">R$</InputAdornment>}
+              labelWidth={40}
+            />
+          </FormControl>
+        </Box>
+      </Container>
+
 
       <Container maxWidth="md" className={classes.boxContainer}>
         <Box className={classes.box}>
