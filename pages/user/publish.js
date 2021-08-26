@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { 
   Box, 
   Button, 
@@ -8,6 +9,7 @@ import {
   Typography 
 } from '@material-ui/core'
 
+import { useDropzone } from 'react-dropzone'
 import { makeStyles } from '@material-ui/core/styles'
 import { DeleteForever } from '@material-ui/icons'
 
@@ -29,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
   thumbsContainer: {
     display: 'flex',
+    flexWrap: 'wrap', // wrap para quebrar para a linha de baixo as imagens upadas
     marginTop: 15,
   },
   dropzone: {
@@ -48,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
     width: 200,
     height: 150,
     backgroundSize: 'cover',
+    margin: '0 15px 15px 0',
     backgroundPosition: 'center center',
 
     '& $mainImage': {
@@ -76,7 +80,34 @@ const useStyles = makeStyles((theme) => ({
 
 
 const Publish = () => {
-  const classes = useStyles()
+  const classes = useStyles() // CSS
+  const [files, setFiles] = useState([])
+
+  // DROPZONE
+
+  const { getRootProps, getInputProps } = useDropzone({ // recebe duas propriedades
+    accept: 'image/*', // quais arquivos serão aceitos
+
+    onDrop: (acceptedFile) => {  // função que será executada sempre que receber um arquivos
+      // console.log(acceptedFile) // teste para "ver" o arquivo
+
+      const newFiles = acceptedFile.map(file => { // map percorrendo cada item do array onDrop
+        return Object.assign(file, { // Object.assign cria um novo objeto para cada item
+          preview: URL.createObjectURL(file) // URL.createObjectURL cria um URL para cada o arquivo
+        })
+      })
+
+      setFiles([ // armazena o newFiles em setFiles
+          ...files, // spread para não resetar as imagens quando upar novas
+          ...newFiles,
+      ]) 
+
+    }
+  })
+
+  // -FIM- DROPZONE
+
+  // CONSTRUÇÃO DA PÁGINA
 
   return (
     <TemplateDefault>
@@ -144,28 +175,55 @@ const Publish = () => {
             A primeira imagem é a foto principal do seu anúncio.
           </Typography>
           <Box className={classes.thumbsContainer}>
-            <Box className={classes.dropzone}>
+
+            {/* AREA DE ARQUIVOS ARRASTÁVEL/CLICÁVEL DE ARQUIVO - REACT-DROPZONE */}
+
+            <Box className={classes.dropzone} {...getRootProps()}> {/* spread do getRootProps, para retornar props pro react-dropzone */}
+              <input {...getInputProps()} /> {/* input para selecionar arquivos do react-dropzone */}
               <Typography variant="body2" color="textPrimary">
                 Clique para adicionar ou arraste a imagem aqui.
               </Typography>
             </Box>
 
-            <Box 
-              className={classes.thumb}
-              style={{ backgroundImage: 'url(https://source.unsplash.com/random)'}}
-            >
-              <Box className={classes.mainImage}>
-                <Typography variant="body2" color="secondary">
-                  Principal
-                </Typography>
-              </Box>
+            {/* -FIM- AREA DE ARQUIVOS ARRASTÁVEL/CLICÁVEL DE ARQUIVO - REACT-DROPZONE */}
 
-              <Box className={classes.mask}>
-                <IconButton color="secondary">
-                  <DeleteForever fontSize="large" />
-                </IconButton>
-              </Box>
-            </Box>
+
+            {/* LOOP PARA PERCORRER OS ARQUIVOS UPADOS */}
+
+            {
+              files.map((file, index) => ( // file, index para reconhecer qual é o primeiro item
+
+                <Box
+                  key={file.name}
+                  className={classes.thumb}
+                  style={{ backgroundImage: `url(${file.preview})` }}
+                >
+
+                  {/* RECONHECER QUEM É O PROMEIRO ARQUIVO */}
+
+                  {
+                    index === 0 ? // se o index for 0 = o primeiro
+                      <Box className={classes.mainImage}>
+                        <Typography variant="body2" color="secondary">
+                          Principal
+                        </Typography>
+                      </Box>
+                      : null // senão, nulo
+                  }
+
+                  {/* -FIM- RECONHECER QUEM É O PROMEIRO ARQUIVO */}
+                  
+
+                  <Box className={classes.mask}>
+                    <IconButton color="secondary">
+                      <DeleteForever fontSize="large" />
+                    </IconButton>
+                  </Box>
+                </Box>
+                
+              ))
+            }
+
 
           </Box>
         </Box>
