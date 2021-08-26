@@ -3,7 +3,7 @@ import Document, { Html, Head, Main, NextScript } from 'next/document'
 import { ServerStyleSheets } from '@material-ui/core/styles'
 import theme from '../src/theme'
 
-export default class MyDocument extends Document {
+class MyDocument extends Document {
   render() {
     return (
       <Html lang="pt-br">
@@ -23,8 +23,13 @@ export default class MyDocument extends Document {
     )
   }
 }
-
+/*
+// `getInitialProps` belong to `_documnent` (instead of `_app`),
+// it's compatible with server-side generation (SSG).
 MyDocument.getInitialProps = async (ctx) => {
+  // Resolution order:
+  //
+  // On the server:
   //
   const sheets = new ServerStyleSheets()
   const originalRenderPage = ctx.renderPage
@@ -34,11 +39,13 @@ MyDocument.getInitialProps = async (ctx) => {
       enhanceApp: (App) => (props) =>  sheets.collect(<App {...props} />),
     })
 
-  const initialProps = await Document.getInicialProps(cts)
+  const initialProps = await Document.getInicialProps(ctx)
 
   return {
     ...initialProps,
-    //
+    // Styles fragment is rendered after the app and page rendering finish.
     styles: [...React.Children.toArray(initialProps.styles), sheets.getStyleElement()],
   }
 }
+*/
+export default MyDocument
