@@ -13,14 +13,14 @@ import {
 import { makeStyles } from '@material-ui/core'
 import Carousel from 'react-material-ui-carousel'
 
-import TemplateDefault from '../src/templates/Default'
+import TemplateDefault from '../../src/templates/Default'
 
 
 const useStyle = makeStyles((theme) => ({
   box: {
     backgroundColor: theme.palette.background.white,
     padding: theme.spacing(3),
-    marginBottom: theme.spacing()
+    marginBottom: theme.spacing(3)
   },
   productName: {
     margin: '15px 0',
